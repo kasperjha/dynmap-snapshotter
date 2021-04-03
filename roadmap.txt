@@ -1,0 +1,5 @@
+ROADMAP:
+ - read from mysql database
+ - progressbars
+ - crop to coordinates
+ - option to load tiles from url
