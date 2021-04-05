@@ -302,11 +302,11 @@ if __name__ == '__main__':
     parser.add_argument('--world', action="store", type=str, help='world to take snapshot of')
     parser.add_argument('--map', action="store", type=str, help='map to take snapshot of')
     parser.add_argument('--interactive', action="store_true", help="helps user decide arguments trough prompts")
-    parser.add_argument('--fixed-tile-size', action="store", default=None, type=int, help="setting tile size will resize the output")
-    parser.add_argument('--scale', action="store", default=None, type=float, help="scale the output image by a decimal point number")
+    parser.add_argument('--scale', action="store", default=None, type=float, help="resize the snapshot with a decimal point number")
+    parser.add_argument('--fixed-tile-size', action="store", default=None, type=int, help="resize the snapshot with setting a new tile size")
     parser.add_argument('--color-hex', action="store", default=None, type=str, help="hex value of color to apply to background.")
+    parser.add_argument('--discord-message', action='store', default=None, type=str, help="message to go along with discord post snapshot")
     parser.add_argument('--discord-webhook-url', action='store', default=None, type=str, help="discord webhook url to post snapshot to.")
-    parser.add_argument('--discord-message', action='store', default=None, type=str, help="discord message to go with snapshot")
     args = parser.parse_args()
 
     if args.interactive:
