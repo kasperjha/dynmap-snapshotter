@@ -55,9 +55,9 @@ Enable posting to discord via a webhook
 ### **All arguments**
 This is the help message for the script
 ```
-> python dynmap_snapshots.py --help
+> python dynmap-snapshotter.py --help
 
-usage: dynmap_snapshots.py [-h] [--folder FOLDER] [--world WORLD] [--map MAP] [--interactive] [--scale SCALE] [--fixed-tile-size FIXED_TILE_SIZE]
+usage: dynmap-snapshotter.py [-h] [--folder FOLDER] [--world WORLD] [--map MAP] [--interactive] [--scale SCALE] [--fixed-tile-size FIXED_TILE_SIZE]
                            [--color-hex COLOR_HEX] [--discord-message DISCORD_MESSAGE] [--discord-webhook-url DISCORD_WEBHOOK_URL]
 
 optional arguments:
