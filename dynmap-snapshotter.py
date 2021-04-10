@@ -10,10 +10,10 @@ except ImportError:
     is_discord_available = False
 
 
-def get_tile_paths(tiles_dir, worldname, mapname):
+def get_tile_paths(tiles_dir, world_name, map_name):
     # get filepaths of tile images
     print('getting tiles ...')
-    map_dir = pathlib.Path(tiles_dir).joinpath(worldname, mapname)
+    map_dir = pathlib.Path(tiles_dir).joinpath(world_name, map_name)
     assert map_dir.exists()
     map_subdirs = [path for path in map_dir.iterdir() if path.is_dir()]
 
@@ -110,13 +110,13 @@ def apply_background_color(snapshot, image_size, color_hex):
     return snapshot_with_bg
 
 
-def create_snapshot(tiles_dir, worldname, mapname, scale, fixed_tile_size, color_hex):
+def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, color_hex):
     # create a snapshot of dynmap
     # make sure we have required arguments
-    assert (tiles_dir and worldname and mapname)
+    assert (tiles_dir and world_name and map_name)
 
     # get tiles
-    tile_paths = get_tile_paths(tiles_dir, worldname, mapname)
+    tile_paths = get_tile_paths(tiles_dir, world_name, map_name)
     tiles = create_tile_objects(tile_paths)
 
     # get sizes apply scale or fixed tile size
@@ -135,7 +135,7 @@ def create_snapshot(tiles_dir, worldname, mapname, scale, fixed_tile_size, color
     return snapshot
 
 
-def save_snapshot(snapshot, worldname, mapname):
+def save_snapshot(snapshot, world_name, map_name):
     # get script dir and build save_dir path
     script_dir = pathlib.Path(__file__).resolve().parent
     save_dir = script_dir.joinpath('snapshots')
@@ -149,7 +149,7 @@ def save_snapshot(snapshot, worldname, mapname):
     print('saving snapshot ...')
     now = datetime.datetime.now()
     timestamp = now.strftime("%d-%m-%Y--%H-%M")
-    filename = f'{timestamp}--{worldname}-{mapname}.png'
+    filename = f'{timestamp}--{world_name}-{map_name}.png'
     output_path = save_dir.joinpath(filename)
     snapshot.save(output_path, 'PNG')
 
@@ -175,9 +175,9 @@ def get_world_names(tiles_dir):
     return world_names
 
 
-def get_map_names(tiles_dir, worldname):
+def get_map_names(tiles_dir, world_name):
     # returns a list of dynmap map names of inut world
-    world_dir = pathlib.Path.joinpath(tiles_dir, worldname)
+    world_dir = pathlib.Path.joinpath(tiles_dir, world_name)
     map_names = [name.stem for name in world_dir.iterdir() if name.exists() and name.is_dir()]
     return map_names
 
