@@ -10,38 +10,41 @@ except ImportError:
     is_discord_available = False
 
 
-def get_tile_paths(tiles_dir, world_name, map_name):
-    # get filepaths of tile images
-    print('getting tiles ...')
+def get_all_tile_coords_from_dir(tiles_dir, world_name, map_name):
+    """ get all tile coordinates from tiles directory """
+    # get relevant directories
     map_dir = pathlib.Path(tiles_dir).joinpath(world_name, map_name)
-    assert map_dir.exists()
     map_subdirs = [path for path in map_dir.iterdir() if path.is_dir()]
 
-    tile_paths = []
+    # get tile coordinates
+    tile_coords = []
     for subdir in map_subdirs:
-        [tile_paths.append(path) for path in subdir.iterdir() if not path.name.startswith('z')]
+        stems = [path.stem for path in subdir.iterdir() if not path.name.startswith('z')]
+        [tile_coords.append(tuple(map(int, stem.split('_')))) for stem in stems]
 
-    return tile_paths
+    return tile_coords
 
 
 class Tile:
-    # tile object to store path coords and pixel coords
-    def __init__(self, path):
-        self.path = path
-        self.coords = [int(x) for x in path.stem.split('_')]
+    # tile object to store coords, image coords and tile image files
+    def __init__(self, tile_coords):
+        self.coords = tile_coords
         self.pixel_coords = None
+        self.image = None
 
 
-def create_tile_objects(tile_paths):
-    # create a object with variables: path, coords, pixel_coords
-    return [Tile(path) for path in tile_paths]
+def load_tile_from_dir(tile, tiles_dir, world_name, map_name):
+    """ load tile image file from tiles directory """
+    x, z = tile.coords
+    tile_path = pathlib.Path(tiles_dir).joinpath(world_name, map_name, f'{x >> 5}_{z >> 5}/{x}_{z}.jpg')
+    tile.image = Image.open(tile_path)
 
 
 def get_default_tile_size(tiles):
     # compare the sizes of two random tiles
     # if they are not the same or the size if snot somthing is seriously wrong
     print('getting tile size ...')
-    tile_size_one, tile_size_two = [Image.open(tile.path).size for tile in random.sample(tiles, 2)]
+    tile_size_one, tile_size_two = [tile.image.size for tile in random.sample(tiles, 2)]
     assert tile_size_one == tile_size_two and tile_size_one[0] == tile_size_one[1]
     return tile_size_one[0]
 
@@ -94,9 +97,8 @@ def assemble_image(tiles, image_size, tile_size):
 
     for tile in tiles:
         # load image and resize
-        tile_image = Image.open(tile.path)
-        tile_image = tile_image.resize((tile_size, tile_size), Image.BICUBIC)
-        output.paste(tile_image, (tile.pixel_coords))
+        tile.image = tile.image.resize((tile_size, tile_size), Image.BICUBIC)
+        output.paste(tile.image, (tile.pixel_coords))
 
     return output
 
@@ -116,8 +118,12 @@ def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, col
     assert (tiles_dir and world_name and map_name)
 
     # get tiles
-    tile_paths = get_tile_paths(tiles_dir, world_name, map_name)
-    tiles = create_tile_objects(tile_paths)
+    tile_coords = get_all_tile_coords_from_dir(tiles_dir, world_name, map_name)
+    tiles = [Tile(coord) for coord in tile_coords]
+
+    # load tile images
+    for tile in tiles:
+        load_tile_from_dir(tile, tiles_dir, world_name, map_name)
 
     # get sizes apply scale or fixed tile size
     default_tile_size = get_default_tile_size(tiles)
@@ -248,10 +254,16 @@ def interactive():
     map_names = get_map_names(tiles_dir, world_name)
     map_name = user_choice("\nSpecify map name.", map_names, default=map_names[-1])
 
-    # get tiles and default tile size
+    # get tiles
     print()
-    tile_paths = get_tile_paths(tiles_dir, world_name, map_name)
-    tiles = create_tile_objects(tile_paths)
+    tile_coords = get_all_tile_coords_from_dir(tiles_dir, world_name, map_name)
+    tiles = [Tile(coord) for coord in tile_coords]
+
+    # load tile images
+    for tile in tiles:
+        load_tile_from_dir(tile, tiles_dir, world_name, map_name)
+
+    # get sizes
     default_tile_size = get_default_tile_size(tiles)
     image_size = calculate_image_size(tiles, default_tile_size)
 
@@ -280,6 +292,7 @@ def interactive():
     color_hex = None
     if user_choice('\nDo you want to apply a background color?', [('yes', True), ('no', False)], default=('no', False)):
         color_hex = user_input('\nProvide a hexadecimal color value (eg. #ff0000):', str)
+
 
     # assemble snapshot and apply background color
     print()
