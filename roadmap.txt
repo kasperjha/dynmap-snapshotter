@@ -1,5 +1,7 @@
 ROADMAP:
- - read from mysql database
+ - load tiles from mysql database
+ - load tiles from url
+ - cropping
  - progressbars
- - crop to coordinates
- - option to load tiles from url
+ - do all heavy processing after prompts in interactive mode
+ - print time of execution
