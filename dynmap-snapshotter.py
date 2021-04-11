@@ -33,11 +33,17 @@ class Tile:
         self.image = None
 
 
-def load_tile_from_dir(tile, tiles_dir, world_name, map_name):
-    """ load tile image file from tiles directory """
+def load_tile_image_from_dir(tile, tiles_dir, world_name, map_name):
+    """ load tile image from tiles directory """
     x, z = tile.coords
     tile_path = pathlib.Path(tiles_dir).joinpath(world_name, map_name, f'{x >> 5}_{z >> 5}/{x}_{z}.jpg')
     tile.image = Image.open(tile_path)
+
+
+def load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name):
+    """ wrapper for load_tile_image_from_dir. loads all tiles from a list of tiles. """
+    for tile in tiles:
+        load_tile_image_from_dir(tile, tiles_dir, world_name, map_name)
 
 
 def get_default_tile_size(tiles):
@@ -122,8 +128,7 @@ def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, col
     tiles = [Tile(coord) for coord in tile_coords]
 
     # load tile images
-    for tile in tiles:
-        load_tile_from_dir(tile, tiles_dir, world_name, map_name)
+    load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name)
 
     # get sizes apply scale or fixed tile size
     default_tile_size = get_default_tile_size(tiles)
@@ -260,8 +265,7 @@ def interactive():
     tiles = [Tile(coord) for coord in tile_coords]
 
     # load tile images
-    for tile in tiles:
-        load_tile_from_dir(tile, tiles_dir, world_name, map_name)
+    load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name)
 
     # get sizes
     default_tile_size = get_default_tile_size(tiles)
@@ -292,7 +296,6 @@ def interactive():
     color_hex = None
     if user_choice('\nDo you want to apply a background color?', [('yes', True), ('no', False)], default=('no', False)):
         color_hex = user_input('\nProvide a hexadecimal color value (eg. #ff0000):', str)
-
 
     # assemble snapshot and apply background color
     print()
