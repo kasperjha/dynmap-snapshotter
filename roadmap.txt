@@ -3,5 +3,5 @@ ROADMAP:
  - load tiles from url
  - cropping
  - progressbars
- - do all heavy processing after prompts in interactive mode
  - print time of execution
+ - show dimentions of output before processing in interactive mode
