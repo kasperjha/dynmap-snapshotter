@@ -48,9 +48,7 @@ def load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name):
 
 def get_default_tile_size(tiles):
     """ get default tile size by sampleing tiles """
-    # compare the sizes of two random tiles
-    # if they are not the same or the size if snot somthing is seriously wrong
-    print('getting tile size ...')
+    # compare the sizes of two random tiles. crazy bug has been introduced if the dont match
     tile_size_one, tile_size_two = [tile.image.size for tile in random.sample(tiles, 2)]
     assert tile_size_one == tile_size_two and tile_size_one[0] == tile_size_one[1]
     return tile_size_one[0]
@@ -70,7 +68,6 @@ def calculate_new_tile_size(tile_size, scale, fixed_tile_size):
 
 def calculate_image_positions(tiles, tile_size):
     """ calculate the pixel coordinates to paste tile image on output image for each tile object """
-    print('calculating image positions for tiles ...')
     all_x_coords = [tile.coords[0] for tile in tiles]
     all_y_coords = [tile.coords[1] for tile in tiles]
     x_range = (min(all_x_coords), max(all_x_coords))
@@ -86,7 +83,6 @@ def calculate_image_positions(tiles, tile_size):
 
 def calculate_image_size(tiles, tile_size):
     """ calculate the dimentions of snapshot from tiles and tile size. returns image size as tuple """
-    print('calculating size of output image ...')
     all_x_coords = [tile.coords[0] for tile in tiles]
     all_y_coords = [tile.coords[1] for tile in tiles]
     x_range = (min(all_x_coords), max(all_x_coords))
@@ -99,7 +95,6 @@ def calculate_image_size(tiles, tile_size):
 def assemble_image(tiles, image_size, tile_size):
     """ assamble snapshot image from tiles with preloaded images """
     # create empty image
-    print('pasting tiles ...')
     output = Image.new('RGBA', image_size)
 
     for tile in tiles:
@@ -112,7 +107,6 @@ def assemble_image(tiles, image_size, tile_size):
 
 def apply_background_color(snapshot, image_size, color_hex):
     """ apply snapshot to background image """
-    print('applying background ...')
     rgb_color = ImageColor.getcolor(color_hex, 'RGB')
     background = Image.new('RGBA', image_size, rgb_color)
     snapshot_with_bg = Image.alpha_composite(background, snapshot)
@@ -126,23 +120,29 @@ def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, col
     assert (tiles_dir and world_name and map_name)
 
     # get tiles
+    print('finding tiles ...')
     tile_coords = get_all_tile_coords_from_dir(tiles_dir, world_name, map_name)
     tiles = [Tile(coord) for coord in tile_coords]
 
     # load tile images
+    print('loading tile images ...')
     load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name)
 
     # get sizes apply scale or fixed tile size
+    print('calculating sizes ...')
     default_tile_size = get_default_tile_size(tiles)
     new_tile_size = calculate_new_tile_size(default_tile_size, scale, fixed_tile_size)
 
     # calculate tile postitions and total size for output image
+    print('calculating pixel coordinates ...')
     tiles = calculate_image_positions(tiles, new_tile_size)
     image_size = calculate_image_size(tiles, new_tile_size)
 
     # assemble snapshot and apply background color
+    print('assembling snapshot ...')
     snapshot = assemble_image(tiles, image_size, new_tile_size)
     if color_hex:
+        print('applying background color ...')
         snapshot = apply_background_color(snapshot, image_size, color_hex)
 
     return snapshot
@@ -156,11 +156,10 @@ def save_snapshot(snapshot, world_name, map_name):
 
     # create folder if non existant
     if not save_dir.exists():
-        print('creating folder ...')
         save_dir.mkdir()
 
     # create timestamped filename
-    print('saving snapshot ...')
+    print('saveing snapshot ...')
     now = datetime.datetime.now()
     timestamp = now.strftime("%d-%m-%Y--%H-%M")
     filename = f'{timestamp}--{world_name}-{map_name}.png'
@@ -178,7 +177,6 @@ def post_to_discord_webhook(snapshot_path, url, message):
 
     # post snapshot to discord
     with open(file=snapshot_path, mode='rb') as f:
-        print('posting to discord ...')
         webhook.send(message, username='dynmap-snapshots', file=discord.File(f))
 
 
@@ -282,7 +280,7 @@ def interactive():
     print()
     snapshot = create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, color_hex)
     snapshot_path = save_snapshot(snapshot, world_name, map_name)
-    print(f'\nDone! Snapshot saved to:\n{snapshot_path}')
+    print(f'\nsnapshot created. output saved to:\n{snapshot_path}')
 
 
 if __name__ == '__main__':
@@ -316,8 +314,9 @@ if __name__ == '__main__':
         # capture and save snapshot
         snapshot = create_snapshot(args.folder, args.world, args.map, args.scale, args.fixed_tile_size, args.color_hex)
         snapshot_path = save_snapshot(snapshot, args.world, args.map)
-        print('snapshot created')
+        print(f'snapshot created. output saved to:\n{snapshot_path}')
 
         # send to discord
         if args.discord_webhook_url:
+            print('posting to discord ...')
             post_to_discord_webhook(snapshot_path, args.discord_webhook_url, args.discord_message)
