@@ -26,7 +26,7 @@ def get_all_tile_coords_from_dir(tiles_dir, world_name, map_name):
 
 
 class Tile:
-    # tile object to store coords, image coords and tile image files
+    """ tile object to store coords, image coords and tile image files """
     def __init__(self, tile_coords):
         self.coords = tile_coords
         self.pixel_coords = None
@@ -47,6 +47,7 @@ def load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name):
 
 
 def get_default_tile_size(tiles):
+    """ get default tile size by sampleing tiles """
     # compare the sizes of two random tiles
     # if they are not the same or the size if snot somthing is seriously wrong
     print('getting tile size ...')
@@ -56,7 +57,7 @@ def get_default_tile_size(tiles):
 
 
 def calculate_new_tile_size(tile_size, scale, fixed_tile_size):
-    # calculate new tile size
+    """ calculate new tile size by applying scale or setting a new fixed tile size"""
     if scale:
         assert isinstance(scale, float)
         return int(tile_size*scale)
@@ -68,8 +69,7 @@ def calculate_new_tile_size(tile_size, scale, fixed_tile_size):
 
 
 def calculate_image_positions(tiles, tile_size):
-    # add properties with image positions for each tile object
-    # image_size = ((x_range[1] - x_range[0] + 1), (y_range[1] - y_range[0] + 1))
+    """ calculate the pixel coordinates to paste tile image on output image for each tile object """
     print('calculating image positions for tiles ...')
     all_x_coords = [tile.coords[0] for tile in tiles]
     all_y_coords = [tile.coords[1] for tile in tiles]
@@ -85,7 +85,7 @@ def calculate_image_positions(tiles, tile_size):
 
 
 def calculate_image_size(tiles, tile_size):
-    # use the properties of tiles objects to assemble output image
+    """ calculate the dimentions of snapshot from tiles and tile size. returns image size as tuple """
     print('calculating size of output image ...')
     all_x_coords = [tile.coords[0] for tile in tiles]
     all_y_coords = [tile.coords[1] for tile in tiles]
@@ -97,7 +97,8 @@ def calculate_image_size(tiles, tile_size):
 
 
 def assemble_image(tiles, image_size, tile_size):
-    # create empty image and load, resize and paste tile images onto it
+    """ assamble snapshot image from tiles with preloaded images """
+    # create empty image
     print('pasting tiles ...')
     output = Image.new('RGBA', image_size)
 
@@ -110,6 +111,7 @@ def assemble_image(tiles, image_size, tile_size):
 
 
 def apply_background_color(snapshot, image_size, color_hex):
+    """ apply snapshot to background image """
     print('applying background ...')
     rgb_color = ImageColor.getcolor(color_hex, 'RGB')
     background = Image.new('RGBA', image_size, rgb_color)
@@ -119,7 +121,7 @@ def apply_background_color(snapshot, image_size, color_hex):
 
 
 def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, color_hex):
-    # create a snapshot of dynmap
+    """ create a snapshot. returns snapshot as pillow image """
     # make sure we have required arguments
     assert (tiles_dir and world_name and map_name)
 
@@ -147,6 +149,7 @@ def create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, col
 
 
 def save_snapshot(snapshot, world_name, map_name):
+    """ save snapshot to script dir in folder called snapshots """
     # get script dir and build save_dir path
     script_dir = pathlib.Path(__file__).resolve().parent
     save_dir = script_dir.joinpath('snapshots')
@@ -168,33 +171,33 @@ def save_snapshot(snapshot, world_name, map_name):
 
 
 def post_to_discord_webhook(snapshot_path, url, message):
-    # post snapshot to discord channel via a webhook
+    """ post snapshot to discord channel via a webhook """
     # get webhook object
     webhook_id, webhook_token = url.split("/")[-2:]
     webhook = discord.Webhook.partial(webhook_id, webhook_token, adapter=discord.RequestsWebhookAdapter())
 
-    # take snapshot
+    # post snapshot to discord
     with open(file=snapshot_path, mode='rb') as f:
         print('posting to discord ...')
         webhook.send(message, username='dynmap-snapshots', file=discord.File(f))
 
 
 def get_world_names(tiles_dir):
-    # returns a list of dynmap world names
+    """ returns a list of dynmap world names"""
     excluded_names = ['_markers_', 'faces', '.vscode', '.git']
     world_names = [name.stem for name in pathlib.Path(tiles_dir).iterdir() if name.stem not in excluded_names]
     return world_names
 
 
 def get_map_names(tiles_dir, world_name):
-    # returns a list of dynmap map names of inut world
+    """ get a list of map names for a world """
     world_dir = pathlib.Path.joinpath(tiles_dir, world_name)
     map_names = [name.stem for name in world_dir.iterdir() if name.exists() and name.is_dir()]
     return map_names
 
 
 def user_choice(prompt, options, default=None):
-    # let user select from a list of objects
+    """ let user select from a list of objects """
     is_options_tuple = isinstance(options[0], tuple)
     is_default_tuple = isinstance(options[0], tuple)
 
@@ -223,7 +226,7 @@ def user_choice(prompt, options, default=None):
 
 
 def user_input(prompt, input_type, default=None):
-    # let user define a value with a nice interface
+    """" let user define a value with a nice interface""""
     # print promt and get input
     if default is not None:
         prompt += f' Press enter for default: {default}'
@@ -243,7 +246,7 @@ def user_input(prompt, input_type, default=None):
 
 
 def interactive():
-    # help pick variables and flags
+    """ help user set arguments by asking a series of prompts """
     # let user specify the tiles directory
     path = user_input('\nSpecify the path to the dynmap tiles directory.', str, default='plugins/dynmap/web/tiles')
     tiles_dir = pathlib.Path(r"{}".format(path))  # convert to raw string literal
