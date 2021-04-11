@@ -226,7 +226,7 @@ def user_choice(prompt, options, default=None):
 
 
 def user_input(prompt, input_type, default=None):
-    """" let user define a value with a nice interface""""
+    """ let user define a value with a nice interface """
     # print promt and get input
     if default is not None:
         prompt += f' Press enter for default: {default}'
