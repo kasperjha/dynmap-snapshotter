@@ -262,26 +262,10 @@ def interactive():
     map_names = get_map_names(tiles_dir, world_name)
     map_name = user_choice("\nSpecify map name.", map_names, default=map_names[-1])
 
-    # get tiles
-    print()
-    tile_coords = get_all_tile_coords_from_dir(tiles_dir, world_name, map_name)
-    tiles = [Tile(coord) for coord in tile_coords]
-
-    # load tile images
-    load_tile_images_from_dir(tiles, tiles_dir, world_name, map_name)
-
-    # get sizes
-    default_tile_size = get_default_tile_size(tiles)
-    image_size = calculate_image_size(tiles, default_tile_size)
-
-    # print resizing info
-    print(f'\nCurrent tile size is {default_tile_size}.')
-    print(f'Your output will be {image_size}.')
-    print('Large images should be resized to reduce filesize.')
-
     # let user either scale or set a fixed tile size
     scale = None
     fixed_tile_size = None
+    print('Large images should be resized to reduce filesize.')
     if user_choice('\nResize the output?', [('yes', True), ('no', False)], default=('no', False)):
         print('\nYou can resize the output by either scaling the output or by setting a new tile size.')
         if user_choice('How do you want to resize?', [('scale', True), ('tile size', False)]):
@@ -289,27 +273,16 @@ def interactive():
         else:
             fixed_tile_size = user_input('\nSet a new tile size (eg. 64):', int)
 
-    # calculate new tile_size, tile postitions and total size for output image
-    print()
-    new_tile_size = calculate_new_tile_size(default_tile_size, scale, fixed_tile_size)
-    tiles = calculate_image_positions(tiles, new_tile_size)
-    image_size = calculate_image_size(tiles, new_tile_size)
-
-    # let user choose background color
+    # let user set a background color
     color_hex = None
     if user_choice('\nDo you want to apply a background color?', [('yes', True), ('no', False)], default=('no', False)):
         color_hex = user_input('\nProvide a hexadecimal color value (eg. #ff0000):', str)
 
-    # assemble snapshot and apply background color
+    # create and save snapshot
     print()
-    snapshot = assemble_image(tiles, image_size, new_tile_size)
-    if color_hex:
-        snapshot = apply_background_color(snapshot, image_size, color_hex)
-
-    # save snapshot
+    snapshot = create_snapshot(tiles_dir, world_name, map_name, scale, fixed_tile_size, color_hex)
     snapshot_path = save_snapshot(snapshot, world_name, map_name)
-    print('\nSnapshot saved to:')
-    print(snapshot_path)
+    print(f'\nDone! Snapshot saved to:\n{snapshot_path}')
 
 
 if __name__ == '__main__':
