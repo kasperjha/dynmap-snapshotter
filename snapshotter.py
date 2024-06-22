@@ -15,7 +15,7 @@ def get_all_tile_coords_from_dir(tiles_dir, world_name, map_name):
     # get relevant directories
     map_dir = pathlib.Path(tiles_dir).joinpath(world_name, map_name)
     map_subdirs = [path for path in map_dir.iterdir() if path.is_dir()]
-
+    
     # get tile coordinates
     tile_coords = []
     for subdir in map_subdirs:
