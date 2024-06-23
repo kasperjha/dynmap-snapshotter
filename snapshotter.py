@@ -99,7 +99,7 @@ def assemble_image(tiles, image_size, tile_size):
 
     for tile in tiles:
         # load image and resize
-        tile.image = tile.image.resize((tile_size, tile_size), Image.BICUBIC)
+        tile.image = tile.image.resize((tile_size, tile_size), Image.NEAREST)
         output.paste(tile.image, (tile.pixel_coords))
 
     return output
