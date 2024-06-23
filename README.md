@@ -34,7 +34,7 @@ Capture a snapshot from the commandline
 - World: Select the desired Minecraft world
 - Map: Choose the map type (t = orthographic terrain, flat = top down, ct = caves rendered orthographically)
 
-3. Click "Create Snapshot" Button to stitch the tiles and create the snapshot image. A pop-up will appear to notify you when the snapshot has been created.
+3. Click "Create Snapshot" Button to stitch the tiles and create the snapshot image. A pop-up will appear to notify you when the snapshot has been created. You can now find your snapshot in the `snapshots` folder where `snapshotter.py` pr `main.py` is located.
 
 ---
 
@@ -53,7 +53,7 @@ Capture a snapshot from the commandline
 
 
 3. Enjoy your snapshot <br/>
-	Find your snapshot in the `snapshots` folder where `dynmap-snapshotter.py` was saved
+	Find your snapshot in the `snapshots` folder where `snapshotter.py` is located.
 
 ### **Daily snapshots with crontab**
 Use crontab to setup daily snapshots 
