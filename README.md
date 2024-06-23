@@ -1,6 +1,8 @@
 # dynmap-snapshotter
 Use this script to assemble one large *snapshot* of your minecraft dynmap.
 
+Most of this README is unchanged from the original repo and does not properly reflect the changes I have made.
+
 
 
 ## Features 
@@ -9,23 +11,32 @@ Use this script to assemble one large *snapshot* of your minecraft dynmap.
 - Resize the output image 
 
 
+## Installation
+I reccommend using Python 3.10, but any version might work. If you encounter issues on different versions of python then please create a virtual environment using a version of Python 3.10.
+
+In order to install, clone the repo using Git, enter repo directory and install requirements with pip.
+```
+git clone https://github.com/verosment/dynmap-snapshotter-v2.git
+```
+```
+cd dynmap-snapshotter-v2
+```
+```
+pip install -r requirements.txt
+```
+
 ## Usage
 ### **Taking a snapshot**
 Capture a snapshot from the commandline
-1. Download dynmap-snapshotter
+1. Run the script using `python main.py`
 
+2. Fill in required parameters:
+- Tiles Directory: Point to where your Dynmap tiles are saved in your server files.
+  Example: `{server-directory}/plugins/dynmap/web/tiles`
+- World: Select the desired Minecraft world
+- Map: Choose the map type (t = orthographic terrain, flat = top down, ct = caves rendered orthographically)
 
-2. Run the script<br/>
-    EITHER in interactive mode<br/>
-    `python dynmap-snapshotter.py --interactive`
-    
-    OR set required arguments yourself<br/>
-    `python dynmap-snapshotter.py --folder plugins/dynmap/web/tiles --world world --map flat`
-
-
-3. Enjoy your snapshot <br/>
-	Find your snapshot in the `snapshots` folder where `dynmap-snapshotter.py` was saved
-
+---
 
 ### **Daily snapshots with crontab**
 Use crontab to setup daily snapshots 
@@ -80,6 +91,9 @@ optional arguments:
 
 
 ## Credit
+[Kasperjha](https://github.com/kasperjha) for creating and writing the original code repository
+
+---
 
 Thanks to https://github.com/GuyInGrey for helping me understand the dynmap api :)
 
