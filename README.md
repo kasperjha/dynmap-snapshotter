@@ -34,7 +34,7 @@ Capture a snapshot from the commandline
 - World: Select the desired Minecraft world
 - Map: Choose the map type (t = orthographic terrain, flat = top down, ct = caves rendered orthographically)
 
-3. Click "Create Snapshot" Button to stitch the tiles and create the snapshot image. A pop-up will appear to notify you when the snapshot has been created. You can now find your snapshot in the `snapshots` folder where `snapshotter.py` pr `main.py` is located.
+3. Click "Create Snapshot" Button to stitch the tiles and create the snapshot image. A pop-up will appear to notify you when the snapshot has been created. You can now find your snapshot in the `snapshots` folder where `snapshotter.py` or `main.py` is located.
 
 ---
 
