@@ -1,6 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, QComboBox, QCheckBox, QMessageBox
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButton, 
+                             QVBoxLayout, QHBoxLayout, QFileDialog, QComboBox, 
+                             QCheckBox, QMessageBox)
+from PyQt6.QtCore import Qt
 import pathlib
 from PIL import Image, ImageColor
 import random
@@ -148,4 +150,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = SnapshotGUI()
     ex.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
