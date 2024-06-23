@@ -80,8 +80,8 @@ Enable posting to discord via a webhook
     
     you may also set the `--discord-message` argument to provide a custom message
     
-### **All arguments**
-This is the help message for the script
+### **All CLI arguments**
+This is the help message for `snapshotter.py`.
 ```
 > python dynmap-snapshotter.py --help
 
