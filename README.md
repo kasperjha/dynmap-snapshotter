@@ -1,4 +1,4 @@
-# dynmap-snapshotter
+# Dynmap Snapshotter V2
 Use this script to assemble one large *snapshot* of your minecraft dynmap.
 
 Most of this README is unchanged from the original repo and does may not reflect the changes I have made.
