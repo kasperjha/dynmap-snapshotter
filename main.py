@@ -1,11 +1,10 @@
 import sys
-from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButton, 
-                             QVBoxLayout, QHBoxLayout, QFileDialog, QComboBox, 
-                             QCheckBox, QMessageBox)
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, QComboBox, QCheckBox, QMessageBox
 from PyQt6.QtCore import Qt
 import pathlib
 from PIL import Image, ImageColor
 import random
+
 
 # import from snapshotter.py
 from snapshotter import (
@@ -144,6 +143,7 @@ class SnapshotGUI(QWidget):
 
             QMessageBox.information(self, "Success", f"Snapshot created and saved to:\n{snapshot_path}")
         except Exception as e:
+            print(f"An error has occurred: {str(e)}")
             QMessageBox.critical(self, "Error", f"An error has occurred: {str(e)}")
 
 if __name__ == '__main__':
