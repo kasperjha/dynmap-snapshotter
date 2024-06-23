@@ -1,7 +1,5 @@
 # Dynmap Snapshotter V2
-Use this script to assemble one large *snapshot* of your minecraft dynmap.
-
-Most of this README is unchanged from the original repo and does may not reflect the changes I have made.
+This tool allows you to capture full, large snapshots of your Minecraft Dynmap from the command line or using a graphical user interface
 
 
 
@@ -38,6 +36,23 @@ Capture a snapshot from the commandline
 
 ---
 
+## Command line Usage
+### **Taking a snapshot**
+Capture a snapshot from the commandline
+1. Download dynmap-snapshotter
+
+
+2. Run the script<br/>
+    EITHER in interactive mode<br/>
+    `python snapshotter.py --interactive`
+    
+    OR set required arguments yourself<br/>
+    `python snapshotter.py --folder plugins/dynmap/web/tiles --world world --map flat`
+
+
+3. Enjoy your snapshot <br/>
+	Find your snapshot in the `snapshots` folder where `dynmap-snapshotter.py` was saved
+
 ### **Daily snapshots with crontab**
 Use crontab to setup daily snapshots 
 1. Open the crontab editor<br/>
@@ -46,7 +61,7 @@ Use crontab to setup daily snapshots
 2. Create a new entry<br/>
 	This will create a snapshot of world:flat every day at 00:00<br/>
 	```
-    0 0 * * * python /home/user/dynmap-snapshotter.py --folder /srv/minecraft/plugins/dynmap/web/tiles --world the_nether --map flat
+    0 0 * * * python /home/user/snapshotter.py --folder /srv/minecraft/plugins/dynmap/web/tiles --world the_nether --map flat
     ```
     remeber to set your own arguments and flags
 
