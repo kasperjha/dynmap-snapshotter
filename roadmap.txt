@@ -1,7 +1,5 @@
 ROADMAP:
- - load tiles from mysql database
- - load tiles from url
  - cropping
  - progressbars
  - print time of execution
- - show dimentions of output before processing in interactive mode
+ - capturing based off timer (capture every 1 hour or whatever value the user chooses)
